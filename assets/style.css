@@ -10,12 +10,22 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Chivo+Mono:ital,wght@0,100..900;1,100..900&display=swap');
 
+img {
+	max-width: 100%;
+	height: auto;
+	margin-top: 30px;     
+	margin-bottom: 30px;   
+	margin-left: 20px;     
+	margin-right: 20px;
+}
+
 body {
 	font-family: "Chivo Mono", monospace;
 	font-weight: 310;
 	color: #fffffff9;
 	transition: background 500ms ease;
 	background-color: #000000f9;
+	padding: 40px;
 }
 
 p, li {
@@ -30,7 +40,7 @@ p, li {
 }
 
 h1, p {
-	margin-bottom:  20px;
+	margin-bottom:  30px;
 }
 
 ul, ol {
