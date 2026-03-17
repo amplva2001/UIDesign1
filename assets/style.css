@@ -6,8 +6,11 @@
 
 /* adjusting fonts */
 
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;700&display=swap');
+
 body {
-	font-family: Georgia, serif;
+	font-family: 'Azeret Mono', monospace;
+	font-weight: 400;
 	transition: background 500ms ease;
 }
 
