@@ -13,7 +13,9 @@
 body {
 	font-family: "Chivo Mono", monospace;
 	font-weight: 310;
+	font-style: #ffffff;
 	transition: background 500ms ease;
+	background-color: #1b1b1bf9;
 }
 
 p, li {
