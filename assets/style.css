@@ -12,12 +12,12 @@
 
 body {
 	font-family: "Chivo Mono", monospace;
-	font-weight: 400;
+	font-weight: 310;
 	transition: background 500ms ease;
 }
 
 p, li {
-	font-size:  22px;
+	font-size:  16px;
 	line-height: 30px;
 }
 
@@ -42,7 +42,7 @@ img {
 
 /* uncomment the code below to set the grid */
 
-/*#grid {
+#grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 }
@@ -61,5 +61,5 @@ body {
 }
 
 #right-column {
-	background: #333;
+	background: #fffffff9;
 }*/
