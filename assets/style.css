@@ -6,8 +6,6 @@
 
 /* adjusting fonts */
 
-
-
 @import url('https://fonts.googleapis.com/css2?family=Chivo+Mono:ital,wght@0,100..900;1,100..900&display=swap');
 
 img {
@@ -21,7 +19,7 @@ img {
 
 body {
 	font-family: "Chivo Mono", monospace;
-	font-weight: 310;
+	font-weight: 30;
 	color: #fffffff9;
 	transition: background 500ms ease;
 	background-color: #000000f9;
