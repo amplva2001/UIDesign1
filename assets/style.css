@@ -55,11 +55,12 @@ p, li {
 }
 
 h1, p {
-	margin-bottom:  30px;
+	margin-bottom:  10px;
 }
 
 ul, ol {
 	margin-left: 20px;
+	margin-bottom:  30px;
 }
 
 img {
