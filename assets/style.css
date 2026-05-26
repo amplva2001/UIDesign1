@@ -7,10 +7,23 @@
 /* adjusting fonts */
 
 @font-face {
-	font-family: 'Piazzolla';
-	src: url('../fonts/Webfonts/Variable Fonts/WOFF2/Piazzolla[opsz,wght].woff2') format('woff2'),
-	     url('../fonts/Webfonts/Variable Fonts/WOFF/Piazzolla[opsz,wght].woff') format('woff');
-	font-weight: 100 900;
+	font-family: 'JetBrains Mono';
+	src: url('../fonts/webfonts/JetBrainsMono-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('../fonts/webfonts/JetBrainsMono-Italic.woff2') format('woff2');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('../fonts/webfonts/JetBrainsMono-Bold.woff2') format('woff2');
+	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 }
@@ -38,7 +51,7 @@ img {
 }
 
 body {
-	font-family: 'Piazzolla', serif;
+	font-family: 'JetBrains Mono', monospace;
 	font-weight: 30;
 	color: #fffffff9;
 	transition: background 500ms ease;
