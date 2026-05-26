@@ -53,10 +53,15 @@ img {
 body {
 	font-family: 'JetBrains Mono', monospace;
 	font-weight: 30;
-	color: #fffffff9;
-	transition: background 500ms ease;
-	background-color: #000000f9;
+	color: #111111;
+	background-color: #f0f0f0;
+	transition: background 500ms ease, color 500ms ease;
 	padding: 40px;
+}
+
+body.dark {
+	color: #fffffff9;
+	background-color: #000000f9;
 }
 
 .infotext-container {
@@ -89,7 +94,7 @@ img {
 }
 
 a {
-	color: #ffffff;
+	color: #111111;
 	text-decoration: none;
 	text-transform: uppercase;
 	font-weight: bold;
@@ -97,6 +102,14 @@ a {
 }
 
 a:hover {
+	color: #ff69b4;
+}
+
+body.dark a {
+	color: #ffffff;
+}
+
+body.dark a:hover {
 	color: #ff69b4;
 }
 
@@ -126,9 +139,9 @@ a:hover {
 }
 
 .project-card {
-	background: #000000;
-	color: #ffffff;
-	border: 1.5px solid #ffffff;
+	background: #f0f0f0;
+	color: #111111;
+	border: 1.5px solid #111111;
 	border-radius: 20px;
 	padding: 24px 20px;
 	flex: 1;
@@ -141,19 +154,19 @@ a:hover {
 	text-transform: none;
 	opacity: 0.5;
 	filter: grayscale(100%);
-	transition: opacity 300ms ease, filter 300ms ease, transform 300ms ease;
+	transition: opacity 300ms ease, filter 300ms ease, transform 300ms ease, background 500ms ease, color 500ms ease, border-color 500ms ease;
 }
 
 .project-card:hover {
 	opacity: 1;
 	filter: grayscale(0%);
 	transform: translateY(-4px);
-	color: #ffffff;
+	color: #111111;
 }
 
 .project-card .card-label {
 	font-size: 13px;
-	color: #ffffff;
+	color: #111111;
 	margin-bottom: 12px;
 }
 
@@ -166,8 +179,56 @@ a:hover {
 
 .project-card .card-name {
 	font-size: 13px;
-	color: #ffffff;
+	color: #111111;
 	margin-top: 12px;
+}
+
+body.dark .project-card {
+	background: #000000;
+	color: #ffffff;
+	border-color: #ffffff;
+}
+
+body.dark .project-card:hover {
+	color: #ffffff;
+}
+
+body.dark .project-card .card-label,
+body.dark .project-card .card-name {
+	color: #ffffff;
+}
+
+/* Dark mode toggle button */
+
+#darkmode {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	background: transparent;
+	color: #111111;
+	border: 1.5px solid #111111;
+	border-radius: 20px;
+	padding: 8px 16px;
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 13px;
+	cursor: pointer;
+	z-index: 100;
+	transition: background 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+
+#darkmode:hover {
+	background: #111111;
+	color: #f0f0f0;
+}
+
+body.dark #darkmode {
+	color: #ffffff;
+	border-color: #ffffff;
+}
+
+body.dark #darkmode:hover {
+	background: #ffffff;
+	color: #000000;
 }
 
 /* uncomment the code below to set the grid */
