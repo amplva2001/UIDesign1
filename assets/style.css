@@ -6,7 +6,14 @@
 
 /* adjusting fonts */
 
-@import url('https://fonts.googleapis.com/css2?family=Chivo+Mono:ital,wght@0,100..900;1,100..900&display=swap');
+@font-face {
+	font-family: 'Piazzolla';
+	src: url('../fonts/Webfonts/Variable Fonts/WOFF2/Piazzolla[opsz,wght].woff2') format('woff2'),
+	     url('../fonts/Webfonts/Variable Fonts/WOFF/Piazzolla[opsz,wght].woff') format('woff');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
 
 img {
 	max-width: 100%;
@@ -31,7 +38,7 @@ img {
 }
 
 body {
-	font-family: "Chivo Mono", monospace;
+	font-family: 'Piazzolla', serif;
 	font-weight: 30;
 	color: #fffffff9;
 	transition: background 500ms ease;
