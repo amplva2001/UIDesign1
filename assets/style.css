@@ -68,6 +68,18 @@ img {
 	height:  auto;
 }
 
+a {
+	color: #ffffff;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: bold;
+	transition: color 200ms ease;
+}
+
+a:hover {
+	color: #ff69b4;
+}
+
 /* uncomment the code below to set the grid */
 
 /*
