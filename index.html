@@ -15,8 +15,8 @@
 
       <!-- about me-->
     <div class="infotext-container"> 
-      <h1>Amma</h1> 
-      <p class="desc">Hei!
+      <h1 class="wave-text">Amma</h1>
+      <p class="desc wave-text">Hei!
         I am an exchange student from Norway!🇳🇴 I am graduating next year, and my major is interaction/service design!✨
         I love going hiking in the mountains and i recently got into fishing!⛰️
         If you know any good fishing spots in Seoul please hit me up! 🎣 🐟
@@ -36,12 +36,27 @@
       </ul>
       
       <h3>Exercises</h3>
-        <ul>
-          <li>ASCII<a href="ascii/exterior-amalievallner.html">Town</a></li>
-          <li>P1 Personal utility <a href="https://www.figma.com/proto/gQEFPnRh4MPP939eYOEY2B/2026-UI-prog-P1-Final-Crit?node-id=31-3181&viewport=279%2C339%2C0.03&t=yfyQnRO5wvSWQYuu-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=2%3A1070&show-proto-sidebar=1&page-id=0%3A1">"Moments"</a></li>
-          <li>P2 Public utility <a href="ascii/exterior-amalievallner.html">"Crumbs"</a></li>
-          <li>P3 Screen saver workshop <a href="https://www.play123.com/">"Weather Clock"</a></li>
-        </ul>
+      <ul>
+        <li>ASCII <a href="ascii/exterior-amalievallner.html">Town</a></li>
+      </ul>
+
+      <div class="project-cards">
+        <a class="project-card" href="https://www.figma.com/proto/gQEFPnRh4MPP939eYOEY2B/2026-UI-prog-P1-Final-Crit?node-id=31-3181&viewport=279%2C339%2C0.03&t=yfyQnRO5wvSWQYuu-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=2%3A1070&show-proto-sidebar=1&page-id=0%3A1">
+          <span class="card-label">P1 Personal Utility</span>
+          <img src="assets/Moments.png" alt="Moments" />
+          <span class="card-name">"Moments"</span>
+        </a>
+        <a class="project-card" href="ascii/exterior-amalievallner.html">
+          <span class="card-label">P2 Public Utility</span>
+          <img src="assets/Cookie.png" alt="Crumbs" />
+          <span class="card-name">"Crumbs"</span>
+        </a>
+        <a class="project-card" href="https://www.play123.com/">
+          <span class="card-label">P3 Screen Saver</span>
+          <img src="assets/pixel_blanket.png" alt="Weather Clock" />
+          <span class="card-name">"Weather Clock"</span>
+        </a>
+      </div>
     
     </div>
   </div>
@@ -52,6 +67,15 @@
       <div class="gif-container">
         <img src="assets/Litten.gif" alt="Album art" />
       </div>
+
+  <script>
+    document.querySelectorAll('.wave-text').forEach(el => {
+      const chars = el.textContent.split('');
+      el.innerHTML = chars.map((char, i) =>
+        `<span style="animation-delay:${(i * 0.05) % 0.6}s">${char === ' ' ? '&nbsp;' : char}</span>`
+      ).join('');
+    });
+  </script>
 
 </body>
 </html>
