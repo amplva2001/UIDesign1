@@ -198,12 +198,13 @@ body.dark .project-card .card-name {
 	color: #ffffff;
 }
 
-body.dark .project-card img[alt="Crumbs"],
+.project-card img[alt="Crumbs"],
 .project-card img[alt="Weather Clock"],
 .project-card img[alt="Moments"] {
 	filter: invert(1);
 }
 
+body.dark .project-card img[alt="Crumbs"],
 body.dark .project-card img[alt="Weather Clock"],
 body.dark .project-card img[alt="Moments"] {
 	filter: invert(0);
