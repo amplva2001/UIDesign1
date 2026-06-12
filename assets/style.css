@@ -198,17 +198,18 @@ body.dark .project-card .card-name {
 	color: #ffffff;
 }
 
-.project-card img[alt="Crumbs"],
 .project-card img[alt="Weather Clock"],
 .project-card img[alt="Moments"] {
+	filter: invert(1);
+}
+
+body.dark .project-card img[alt="Weather Clock"],
+body.dark .project-card img[alt="Moments"] {
 	filter: invert(0);
 }
 
-body.dark .project-card img[alt="Crumbs"],
-body.dark .project-card img[alt="Weather Clock"],
-body.dark .project-card img[alt="Moments"] {
-	filter: invert(1);
-}
+.project-card img[alt="Crumbs"] { filter: invert(0); }
+body.dark .project-card img[alt="Crumbs"] { filter: invert(1); }
 
 /* Dark mode toggle button */
 
