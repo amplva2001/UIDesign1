@@ -69,6 +69,11 @@ function randomColor() {
   return `hsl(${Math.floor(Math.random() * 360)}, 80%, 68%)`;
 }
 
+function randomBlobShape() {
+  const p = () => (Math.floor(Math.random() * 45) + 20) + '%';
+  return `${p()} ${p()} ${p()} ${p()} / ${p()} ${p()} ${p()} ${p()}`;
+}
+
 function formatDate(d) {
   return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
     + ' at ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
@@ -137,25 +142,36 @@ let crumbCount = 0;
 
 function renderCrumb(data) {
   const { name, href, author, comment, timestamp, x, y, color } = data;
+
+  const w = 14 + Math.random() * 32;
+  const h = 10 + Math.random() * 22;
+
   const el = document.createElement('div');
-  el.className        = 'crumb';
-  el.textContent      = name;
-  el.style.left       = x + 'px';
-  el.style.top        = y + 'px';
-  el.style.background = color;
+  el.className          = 'crumb';
+  el.style.left         = x + 'px';
+  el.style.top          = y + 'px';
+  el.style.width        = w + 'px';
+  el.style.height       = h + 'px';
+  el.style.borderRadius = randomBlobShape();
 
   const tip = document.getElementById('tooltip');
   el.addEventListener('mouseenter', () => {
+    el.style.boxShadow = `0 0 0 3px ${color}, 0 4px 20px ${color}`;
     let html = `<b>${name}</b><br>${timestamp} by ${author}`;
-    if (comment) html += ` &ldquo;${comment}&rdquo;`;
-    tip.innerHTML = html;
-    tip.style.display = 'block';
+    if (comment) html += `<br>&ldquo;${comment}&rdquo;`;
+    tip.innerHTML        = html;
+    tip.style.background = color;
+    tip.style.border     = `2px solid ${color}`;
+    tip.style.display    = 'block';
   });
   el.addEventListener('mousemove', e => {
     tip.style.left = (e.clientX + 14) + 'px';
     tip.style.top  = (e.clientY + 14) + 'px';
   });
-  el.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+  el.addEventListener('mouseleave', () => {
+    el.style.boxShadow = '';
+    tip.style.display  = 'none';
+  });
   el.addEventListener('click', () => window.open(href, '_blank'));
 
   document.getElementById('crumb-area').appendChild(el);
