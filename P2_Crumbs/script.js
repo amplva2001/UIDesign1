@@ -84,25 +84,30 @@ function saveLocal(data) {
   localStorage.setItem('crumbs', JSON.stringify(all));
 }
 
-// ── Google Sheets: fetch approved crumbs ──────────────────────────────────────
-async function fetchApproved() {
-  try {
-    const res = await fetch(SCRIPT_URL);
-    if (!res.ok) return null;
-    const rows = await res.json();
-    return rows.map(r => ({
-      name:      r.name,
-      href:      r.url,
-      author:    r.author    || 'Anon',
-      comment:   r.comment   || '',
-      timestamp: r.timestamp || '',
-      color:     r.color     || randomColor(),
-      x:         Number(r.x) || 60,
-      y:         Number(r.y) || 80,
-    }));
-  } catch {
-    return null;
-  }
+// ── Google Sheets: fetch approved crumbs (JSONP to avoid CORS) ────────────────
+function fetchApproved() {
+  return new Promise((resolve) => {
+    const cbName = '__crumbs_cb__';
+    window[cbName] = (rows) => {
+      delete window[cbName];
+      document.getElementById('jsonp-script')?.remove();
+      resolve(rows.map(r => ({
+        name:      r.name,
+        href:      r.url,
+        author:    r.author    || 'Anon',
+        comment:   r.comment   || '',
+        timestamp: r.timestamp || '',
+        color:     r.color     || randomColor(),
+        x:         Number(r.x) || 60,
+        y:         Number(r.y) || 80,
+      })));
+    };
+    const script = document.createElement('script');
+    script.id  = 'jsonp-script';
+    script.src = SCRIPT_URL + '?callback=' + cbName;
+    script.onerror = () => { delete window[cbName]; script.remove(); resolve(null); };
+    document.head.appendChild(script);
+  });
 }
 
 // ── Google Sheets: submit a crumb as pending ──────────────────────────────────
