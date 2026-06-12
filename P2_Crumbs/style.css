@@ -146,3 +146,54 @@ body.dark #theme-icon { filter: invert(1); }
   color: #fff;
 }
 .add-btn:hover { background: #333; }
+
+/* ── pending review modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-overlay[hidden] { display: none; }
+
+.modal-box {
+  background: #fff;
+  border: 1px solid #000;
+  padding: 32px 36px;
+  max-width: 420px;
+  width: 90%;
+  font-family: 'Courier New', monospace;
+}
+
+.modal-title {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 14px;
+  letter-spacing: 0.04em;
+}
+
+.modal-body {
+  font-size: 12px;
+  line-height: 1.75;
+  color: #444;
+  margin-bottom: 24px;
+}
+
+.modal-close {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  cursor: pointer;
+}
+.modal-close:hover { background: #333; }
+
+body.dark .modal-box   { background: #111; border-color: #444; }
+body.dark .modal-body  { color: #aaa; }
+body.dark .modal-close { background: #fff; color: #000; }
+body.dark .modal-close:hover { background: #ddd; }

@@ -1,4 +1,8 @@
-// ── Theme toggle ─────────────────────────────────────────────────────────────
+// ── Google Apps Script config ─────────────────────────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxhkduo4yhMb6iXZZlvMtaAFBLB1lgaWn8u5slprNJikJKTLM-6Al0fLa2Yyx2GR9Y9/exec';
+const SCRIPT_CONFIGURED = true;
+
+// ── Theme toggle ──────────────────────────────────────────────────────────────
 const themeBtn  = document.getElementById('theme-btn');
 const themeIcon = document.getElementById('theme-icon');
 
@@ -60,30 +64,73 @@ function getFact(domain) {
   return GENERIC[Math.floor(Math.random() * GENERIC.length)];
 }
 
-// ── Random color ──────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 function randomColor() {
-  const h = Math.floor(Math.random() * 360);
-  return `hsl(${h}, 80%, 68%)`;
+  return `hsl(${Math.floor(Math.random() * 360)}, 80%, 68%)`;
 }
-
-// ── Persistence ───────────────────────────────────────────────────────────────
-function loadSaved() {
-  return JSON.parse(localStorage.getItem('crumbs') || '[]');
-}
-
-function saveCrumb(data) {
-  const all = loadSaved();
-  all.push(data);
-  localStorage.setItem('crumbs', JSON.stringify(all));
-}
-
-// ── Render a crumb from a data object ────────────────────────────────────────
-let crumbCount = 0;
 
 function formatDate(d) {
   return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
     + ' at ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 }
+
+// ── Local fallback (used when Airtable is not configured) ─────────────────────
+function loadSaved() {
+  return JSON.parse(localStorage.getItem('crumbs') || '[]');
+}
+function saveLocal(data) {
+  const all = loadSaved();
+  all.push(data);
+  localStorage.setItem('crumbs', JSON.stringify(all));
+}
+
+// ── Google Sheets: fetch approved crumbs ──────────────────────────────────────
+async function fetchApproved() {
+  try {
+    const res = await fetch(SCRIPT_URL);
+    if (!res.ok) return null;
+    const rows = await res.json();
+    return rows.map(r => ({
+      name:      r.name,
+      href:      r.url,
+      author:    r.author    || 'Anon',
+      comment:   r.comment   || '',
+      timestamp: r.timestamp || '',
+      color:     r.color     || randomColor(),
+      x:         Number(r.x) || 60,
+      y:         Number(r.y) || 80,
+    }));
+  } catch {
+    return null;
+  }
+}
+
+// ── Google Sheets: submit a crumb as pending ──────────────────────────────────
+async function submitPending(data) {
+  await fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify({
+      name:      data.name,
+      url:       data.href,
+      author:    data.author,
+      comment:   data.comment,
+      timestamp: data.timestamp,
+      color:     data.color,
+      x:         data.x,
+      y:         data.y,
+    }),
+  });
+}
+
+// ── Pending review modal ──────────────────────────────────────────────────────
+const pendingModal = document.getElementById('pending-modal');
+document.getElementById('modal-close').addEventListener('click', () => {
+  pendingModal.hidden = true;
+});
+
+// ── Render a crumb ────────────────────────────────────────────────────────────
+let crumbCount = 0;
 
 function renderCrumb(data) {
   const { name, href, author, comment, timestamp, x, y, color } = data;
@@ -113,7 +160,8 @@ function renderCrumb(data) {
   document.getElementById('stat-crumbs').textContent = crumbCount;
 }
 
-function addCrumb(nameOverride, urlOverride, authorOverride, commentOverride) {
+// ── Add crumb ─────────────────────────────────────────────────────────────────
+async function addCrumb(nameOverride, urlOverride, authorOverride, commentOverride) {
   const urlEl     = document.getElementById('url-input');
   const nameEl    = document.getElementById('name-input');
   const authorEl  = document.getElementById('author-input');
@@ -137,7 +185,7 @@ function addCrumb(nameOverride, urlOverride, authorOverride, commentOverride) {
   const data = {
     name:      label || domain,
     href,
-    author:    authorOverride  || authorEl.value.trim()  || 'Anon',
+    author:    authorOverride  || authorEl.value.trim() || 'Anon',
     comment:   commentOverride || commentEl.value.trim(),
     timestamp: formatDate(new Date()),
     x:         24 + Math.random() * (areaW - 180),
@@ -145,8 +193,13 @@ function addCrumb(nameOverride, urlOverride, authorOverride, commentOverride) {
     color:     randomColor(),
   };
 
-  renderCrumb(data);
-  saveCrumb(data);
+  try {
+    await submitPending(data);
+    pendingModal.hidden = false;
+  } catch {
+    saveLocal(data);
+    renderCrumb(data);
+  }
 
   if (!urlOverride)  urlEl.value  = '';
   if (!nameOverride) nameEl.value = '';
@@ -159,12 +212,18 @@ document.getElementById('url-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') addCrumb();
 });
 
-// ── On load: restore saved crumbs or seed with example ───────────────────────
-window.addEventListener('load', () => {
-  const saved = loadSaved();
-  if (saved.length > 0) {
-    saved.forEach(renderCrumb);
+// ── On load ───────────────────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  const approved = await fetchApproved();
+
+  if (approved && approved.length > 0) {
+    approved.forEach(renderCrumb);
   } else {
-    addCrumb('everynoise', 'https://everynoise.com', 'Anon', 'Let your ears be massaged');
+    const saved = loadSaved();
+    if (saved.length > 0) {
+      saved.forEach(renderCrumb);
+    } else {
+      addCrumb('everynoise', 'https://everynoise.com', 'Anon', 'Let your ears be massaged');
+    }
   }
 });
