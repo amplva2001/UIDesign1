@@ -66,7 +66,8 @@ function getFact(domain) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function randomColor() {
-  return `hsl(${Math.floor(Math.random() * 360)}, 80%, 68%)`;
+  const h = () => Math.floor(Math.random() * 156 + 100).toString(16).padStart(2, '0');
+  return '#' + h() + h() + h();
 }
 
 function randomBlobShape() {
