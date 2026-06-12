@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>index</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body { cursor: url('assets/cursor-sm.png') 10 10, auto; }
+
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background: #fff;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── top stats bar ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr) auto;
+      border-bottom: 1px solid #000;
+      flex-shrink: 0;
+    }
+    .stats-bar > * {
+      padding: 5px 10px;
+      font-size: 11px;
+      border-right: 1px solid #000;
+    }
+    .stats-bar > *:last-child { border-right: none; }
+
+    /* ── scrollable canvas ── */
+    #canvas {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── intro section ── */
+    .intro {
+      padding: 28px 24px 20px;
+    }
+    .intro-text p { font-size: 13px; line-height: 1.65; }
+
+    /* ── crumb scatter area ── */
+    #crumb-area {
+      position: relative;
+      min-height: 700px;
+      border-top: 1px solid #eee;
+      margin-top: 12px;
+    }
+
+    /* ── individual crumb (pill button) ── */
+    .crumb {
+      position: absolute;
+      padding: 7px 18px;
+      border-radius: 50px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: #000;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 120ms, box-shadow 120ms;
+      user-select: none;
+    }
+    .crumb:hover {
+      transform: scale(1.06);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      z-index: 999;
+    }
+
+    /* ── dark mode ── */
+    body.dark {
+      background: #000;
+      color: #fff;
+    }
+    body.dark .stats-bar > div { border-color: #333; }
+    body.dark .stats-bar       { border-color: #333; }
+    body.dark #canvas          { background: #000; }
+    body.dark .intro-text p    { color: #ccc; }
+    body.dark #crumb-area      { border-color: #222; }
+    body.dark .form-bar        { background: #000; border-color: #333; }
+    body.dark .form-bar > *    { background: #000; color: #fff; border-color: #333; }
+    body.dark .add-btn         { background: #fff; color: #000; }
+    body.dark .add-btn:hover   { background: #ddd; }
+    body.dark .form-bar input::placeholder { color: #555; }
+
+    #theme-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #theme-icon           { width: 18px; height: 18px; display: block; filter: invert(1); }
+    body.dark #theme-icon { filter: invert(1); }
+
+    /* ── tooltip ── */
+    .tooltip {
+      display: none;
+      position: fixed;
+      background: #000;
+      color: #fff;
+      font-size: 11px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      max-width: 240px;
+      line-height: 1.5;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── fixed bottom form bar ── */
+    .form-bar {
+      display: flex;
+      border-top: 1px solid #000;
+      flex-shrink: 0;
+      height: 44px;
+    }
+    .form-bar > * {
+      border-right: 1px solid #000;
+      padding: 0 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      background: #fff;
+      color: #000;
+      outline: none;
+      display: flex;
+      align-items: center;
+    }
+    .form-bar > *:last-child { border-right: none; }
+    .form-bar input { border: none; }
+    .form-bar input::placeholder { color: #aaa; }
+
+    .form-label { white-space: nowrap; flex-shrink: 0; }
+
+    .name-input    { width: 160px; flex-shrink: 0; }
+    .url-input     { flex: 1; }
+    .author-input  { width: 140px; flex-shrink: 0; }
+    .comment-input { width: 200px; flex-shrink: 0; }
+
+    .add-btn {
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-weight: bold;
+      background: #000;
+      color: #fff;
+    }
+    .add-btn:hover { background: #333; }
+  </style>
+</head>
+<body>
+
+  <!-- Top stats bar -->
+  <div class="stats-bar">
+    <div>Crumbs collected</div>
+    <div id="stat-crumbs">0</div>
+    <div>People visited</div>
+    <div id="stat-visited">0</div>
+    <div>Your time spent here</div>
+    <div id="stat-time">00:00</div>
+    <div>People here right now</div>
+    <div id="stat-now">10</div>
+    <button id="theme-btn" title="Toggle dark/light mode">
+      <img id="theme-icon" src="assets/light mode.png" alt="light mode"/>
+    </button>
+  </div>
+
+  <!-- Scrollable canvas -->
+  <div id="canvas">
+
+    <!-- Intro -->
+    <div class="intro">
+      <div class="intro-text">
+        <p>Crumbs is a human-made collective feed of the web – built entirely from URLs that real people have visited and chosen to leave here. every crumb below is a trace: a site someone went to, tagged, and dropped. When you visit a website, it plants an HTTP cookie in your browser without asking – a file that records your presence, habits, identity. What if you could choose what to leave behind for others to see. Some good news? A good story? A funny fact? The internet is an ever growing space where many hidden treasures will never be discovered and what we see is controlled by algorithms and commercials.... Here, you plant the cookie yourself. you decide what trace you leave and how you name it. paste a URL in the bar below and drop it. Hover any crumb to explore what people have left behind.</p>
+      </div>
+    </div>
+
+    <!-- Crumb scatter area -->
+    <div id="crumb-area"></div>
+
+  </div>
+
+
+  <!-- Tooltip -->
+  <div class="tooltip" id="tooltip"></div>
+
+  <!-- Bottom form bar -->
+  <div class="form-bar">
+    <div class="form-label">Make crumb here &nbsp;→</div>
+    <input class="name-input"    id="name-input"    type="text" placeholder="name your crumb..."/>
+    <input class="url-input"     id="url-input"     type="text" placeholder="paste url here..."/>
+    <input class="author-input"  id="author-input"  type="text" placeholder="your name..."/>
+    <input class="comment-input" id="comment-input" type="text" placeholder="leave a comment..."/>
+    <button class="add-btn" id="add-btn">Add crumb</button>
+  </div>
+
+  <script>
+    // ── Theme toggle ─────────────────────────────────────────
+    const themeBtn  = document.getElementById('theme-btn');
+    const themeIcon = document.getElementById('theme-icon');
+
+    function applyTheme(isDark) {
+      document.body.classList.toggle('dark', isDark);
+      // show the icon for what you'll switch TO
+      themeIcon.src = isDark ? 'assets/light mode.png' : 'assets/dark mode.png';
+      themeIcon.alt = isDark ? 'switch to light' : 'switch to dark';
+    }
+
+    applyTheme(localStorage.getItem('theme') === 'dark');
+
+    themeBtn.addEventListener('click', () => {
+      const isDark = !document.body.classList.contains('dark');
+      applyTheme(isDark);
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // ── Timer ────────────────────────────────────────────────
+    let secs = 0, visited = 1;
+    document.getElementById('stat-visited').textContent = visited;
+    setInterval(() => {
+      secs++;
+      const m = String(Math.floor(secs / 60)).padStart(2,'0');
+      const s = String(secs % 60).padStart(2,'0');
+      document.getElementById('stat-time').textContent = m + ':' + s;
+    }, 1000);
+
+    // ── Cookie facts per domain ──────────────────────────────
+    const FACTS = {
+      "google.com":     "Google sets over 20 cookies and tracks you across 86% of the web.",
+      "youtube.com":    "YouTube cookies remember every video you watch — even in incognito.",
+      "facebook.com":   "Facebook tracks you on sites you have never visited via the Like button.",
+      "instagram.com":  "Instagram shares your data with 75+ advertising partners.",
+      "twitter.com":    "Twitter cookies persist for up to 2 years after your last visit.",
+      "amazon.com":     "Amazon tracks your cursor movements and time spent on each product.",
+      "tiktok.com":     "TikTok cookies collect keystroke data, including things you never post.",
+      "reddit.com":     "Reddit sells browsing data to train AI models.",
+      "naver.com":      "Naver uses cookies to profile users across Korea's entire web.",
+      "kakao.com":      "KakaoTalk cookies sync across all your devices and platforms.",
+      "everynoise.com": "Every Noise at Once has no tracking — a rare cookie-free corner of the web.",
+    };
+    const GENERIC = [
+      "This site plants a cookie the moment you land — before you click anything.",
+      "Cookies here may outlive the browser tab, the session, even the browser itself.",
+      "Third-party cookies on this domain follow you to other sites.",
+      "This site likely knows your rough location from your IP before you load.",
+      "Your scroll depth, click pattern, and reading speed may be recorded.",
+      "Advertisers can bid on showing you ads based on this visit in under 100ms.",
+      "Deleting cookies here will not remove the fingerprint your browser left behind.",
+      "Returning to this site tells its server exactly how long you were away.",
+    ];
+    function getFact(domain) {
+      for (const [key, fact] of Object.entries(FACTS)) {
+        if (domain.includes(key)) return fact;
+      }
+      return GENERIC[Math.floor(Math.random() * GENERIC.length)];
+    }
+
+    // ── Random color ─────────────────────────────────────────
+    function randomColor() {
+      const h = Math.floor(Math.random() * 360);
+      return `hsl(${h}, 80%, 68%)`;
+    }
+
+    // ── Persistence ───────────────────────────────────────────
+    function loadSaved() {
+      return JSON.parse(localStorage.getItem('crumbs') || '[]');
+    }
+    function saveCrumb(data) {
+      const all = loadSaved();
+      all.push(data);
+      localStorage.setItem('crumbs', JSON.stringify(all));
+    }
+
+    // ── Render a crumb from a data object ─────────────────────
+    let crumbCount = 0;
+
+    function formatDate(d) {
+      return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
+        + ' at ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+    }
+
+    function renderCrumb(data) {
+      const { name, href, author, comment, timestamp, x, y, color } = data;
+      const el = document.createElement('div');
+      el.className        = 'crumb';
+      el.textContent      = name;
+      el.style.left       = x + 'px';
+      el.style.top        = y + 'px';
+      el.style.background = color;
+
+      const tip = document.getElementById('tooltip');
+      el.addEventListener('mouseenter', () => {
+        let html = `<b>${name}</b><br>${timestamp} by ${author}`;
+        if (comment) html += ` &ldquo;${comment}&rdquo;`;
+        tip.innerHTML = html;
+        tip.style.display = 'block';
+      });
+      el.addEventListener('mousemove', e => {
+        tip.style.left = (e.clientX + 14) + 'px';
+        tip.style.top  = (e.clientY + 14) + 'px';
+      });
+      el.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+      el.addEventListener('click', () => window.open(href, '_blank'));
+
+      document.getElementById('crumb-area').appendChild(el);
+      crumbCount++;
+      document.getElementById('stat-crumbs').textContent = crumbCount;
+    }
+
+    function addCrumb(nameOverride, urlOverride, authorOverride, commentOverride) {
+      const urlEl     = document.getElementById('url-input');
+      const nameEl    = document.getElementById('name-input');
+      const authorEl  = document.getElementById('author-input');
+      const commentEl = document.getElementById('comment-input');
+      const raw   = urlOverride  || urlEl.value.trim();
+      const label = nameOverride || nameEl.value.trim();
+      if (!raw) return;
+
+      let domain = raw, href = raw;
+      try {
+        const u = new URL(raw.startsWith('http') ? raw : 'https://' + raw);
+        domain = u.hostname.replace('www.','');
+        href   = u.href;
+      } catch {}
+
+      const area  = document.getElementById('crumb-area');
+      const areaW = area.offsetWidth || window.innerWidth;
+      const areaH = Math.max(area.offsetHeight, 700);
+
+      const data = {
+        name:      label || domain,
+        href,
+        author:    authorOverride  || authorEl.value.trim()  || 'Anon',
+        comment:   commentOverride || commentEl.value.trim(),
+        timestamp: formatDate(new Date()),
+        x:         24 + Math.random() * (areaW - 180),
+        y:         24 + Math.random() * (areaH - 60),
+        color:     randomColor(),
+      };
+
+      renderCrumb(data);
+      saveCrumb(data);
+
+      if (!urlOverride)  urlEl.value  = '';
+      if (!nameOverride) nameEl.value = '';
+      authorEl.value  = '';
+      commentEl.value = '';
+    }
+
+    document.getElementById('add-btn').addEventListener('click', () => addCrumb());
+    document.getElementById('url-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') addCrumb();
+    });
+
+    // ── On load: restore saved crumbs or seed with example ────
+    window.addEventListener('load', () => {
+      const saved = loadSaved();
+      if (saved.length > 0) {
+        saved.forEach(renderCrumb);
+      } else {
+        addCrumb('everynoise', 'https://everynoise.com', 'Anon', 'Let your ears be massaged');
+      }
+    });
+  </script>
+</body>
+</html>
