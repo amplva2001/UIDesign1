@@ -79,6 +79,15 @@ function formatDate(d) {
     + ' at ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 }
 
+function formatTimestamp(val) {
+  if (!val) return '';
+  const d = new Date(val);
+  if (!isNaN(d.getTime()) && String(val).includes('T')) {
+    return formatDate(d);
+  }
+  return String(val);
+}
+
 // ── Local fallback (used when Airtable is not configured) ─────────────────────
 function loadSaved() {
   return JSON.parse(localStorage.getItem('crumbs') || '[]');
@@ -101,7 +110,7 @@ function fetchApproved() {
         href:      r.url,
         author:    r.author    || 'Anon',
         comment:   r.comment   || '',
-        timestamp: r.timestamp || '',
+        timestamp: formatTimestamp(r.timestamp),
         color:     r.color     || randomColor(),
         x:         Number(r.x) || 60,
         y:         Number(r.y) || 80,
