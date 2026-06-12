@@ -125,33 +125,20 @@ function fetchApproved() {
   });
 }
 
-// ── Google Sheets: submit a crumb as pending (JSONP to avoid CORS) ────────────
-function submitPending(data) {
-  return new Promise((resolve, reject) => {
-    const cbName = '__crumbs_submit_cb__';
-    window[cbName] = () => {
-      delete window[cbName];
-      document.getElementById('submit-script')?.remove();
-      resolve();
-    };
-    const params = new URLSearchParams({
-      action:    'submit',
-      callback:  cbName,
-      name:      data.name,
-      url:       data.href,
-      author:    data.author,
-      comment:   data.comment,
-      timestamp: data.timestamp,
-      color:     data.color,
-      x:         data.x,
-      y:         data.y,
-    });
-    const script = document.createElement('script');
-    script.id  = 'submit-script';
-    script.src = SCRIPT_URL + '?' + params.toString();
-    script.onerror = () => { delete window[cbName]; script.remove(); reject(); };
-    document.head.appendChild(script);
+// ── Google Sheets: submit a crumb as pending ─────────────────────────────────
+async function submitPending(data) {
+  const params = new URLSearchParams({
+    action:    'submit',
+    name:      data.name,
+    url:       data.href,
+    author:    data.author,
+    comment:   data.comment,
+    timestamp: data.timestamp,
+    color:     data.color,
+    x:         data.x,
+    y:         data.y,
   });
+  await fetch(SCRIPT_URL + '?' + params.toString(), { mode: 'no-cors' });
 }
 
 // ── Pending review modal ──────────────────────────────────────────────────────
