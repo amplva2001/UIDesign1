@@ -226,7 +226,16 @@ window.addEventListener('load', async () => {
     if (saved.length > 0) {
       saved.forEach(renderCrumb);
     } else {
-      addCrumb('everynoise', 'https://everynoise.com', 'Anon', 'Let your ears be massaged');
+      renderCrumb({
+        name:      'everynoise',
+        href:      'https://everynoise.com',
+        author:    'Anon',
+        comment:   'Let your ears be massaged',
+        timestamp: 'seeded',
+        color:     randomColor(),
+        x:         60,
+        y:         80,
+      });
     }
   }
 });
