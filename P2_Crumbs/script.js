@@ -107,21 +107,18 @@ async function fetchApproved() {
 
 // ── Google Sheets: submit a crumb as pending ──────────────────────────────────
 async function submitPending(data) {
-  await fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({
-      name:      data.name,
-      url:       data.href,
-      author:    data.author,
-      comment:   data.comment,
-      timestamp: data.timestamp,
-      color:     data.color,
-      x:         data.x,
-      y:         data.y,
-    }),
+  const params = new URLSearchParams({
+    action:    'submit',
+    name:      data.name,
+    url:       data.href,
+    author:    data.author,
+    comment:   data.comment,
+    timestamp: data.timestamp,
+    color:     data.color,
+    x:         data.x,
+    y:         data.y,
   });
+  await fetch(SCRIPT_URL + '?' + params.toString());
 }
 
 // ── Pending review modal ──────────────────────────────────────────────────────
