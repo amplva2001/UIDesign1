@@ -83,8 +83,8 @@ body.dark .form-bar input::placeholder { color: #555; }
   align-items: center;
   justify-content: center;
 }
-#theme-icon           { width: 18px; height: 18px; display: block; filter: invert(1); }
-body.dark #theme-icon { filter: invert(1); }
+#theme-icon           { width: 18px; height: 18px; display: block; filter: none; }
+body.dark #theme-icon { filter: none; }
 
 /* ── tooltip ── */
 .tooltip {

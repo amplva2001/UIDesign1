@@ -8,7 +8,7 @@ const themeIcon = document.getElementById('theme-icon');
 
 function applyTheme(isDark) {
   document.body.classList.toggle('dark', isDark);
-  themeIcon.src = isDark ? 'assets/light mode.png' : 'assets/dark mode.png';
+  themeIcon.src = isDark ? 'assets/dark mode.png' : 'assets/light mode.png';
   themeIcon.alt = isDark ? 'switch to light' : 'switch to dark';
 }
 
