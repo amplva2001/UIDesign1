@@ -1,60 +1,148 @@
-* {
-	margin:  0px;
-	padding:  0px;
-	box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* adjusting fonts */
+html, body { cursor: url('cursor-sm.png') 10 10, auto; }
 
 body {
-	font-family: -apple-system, BlinkMacSystemFont, helvetica, arial, sans-serif;
-	transition: background 500ms ease;
+  font-family: 'Courier New', Courier, monospace;
+  background: #fff;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
-p, li {
-	font-size:  22px;
-	line-height: 30px;
+/* ── top stats bar ── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr) auto;
+  border-bottom: 1px solid #000;
+  flex-shrink: 0;
+}
+.stats-bar > * {
+  padding: 5px 10px;
+  font-size: 11px;
+  border-right: 1px solid #000;
+}
+.stats-bar > *:last-child { border-right: none; }
+
+/* ── scrollable canvas ── */
+#canvas {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* adjusting spacing */
+/* ── intro section ── */
+.intro {
+  padding: 28px 24px 20px;
+}
+.intro-text p { font-size: 13px; line-height: 1.65; }
 
-#left-column {
-	padding: 20px;
+/* ── crumb scatter area ── */
+#crumb-area {
+  position: relative;
+  min-height: 700px;
+  border-top: 1px solid #eee;
+  margin-top: 12px;
 }
 
-h1, p {
-	margin-bottom:  20px;
+/* ── individual crumb (pill button) ── */
+.crumb {
+  position: absolute;
+  padding: 7px 18px;
+  border-radius: 50px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 120ms, box-shadow 120ms;
+  user-select: none;
+}
+.crumb:hover {
+  transform: scale(1.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  z-index: 999;
 }
 
-ul, ol {
-	margin-left: 20px;
+/* ── dark mode ── */
+body.dark { background: #000; color: #fff; }
+body.dark .stats-bar > div { border-color: #333; }
+body.dark .stats-bar       { border-color: #333; }
+body.dark #canvas          { background: #000; }
+body.dark .intro-text p    { color: #ccc; }
+body.dark #crumb-area      { border-color: #222; }
+body.dark .form-bar        { background: #000; border-color: #333; }
+body.dark .form-bar > *    { background: #000; color: #fff; border-color: #333; }
+body.dark .add-btn         { background: #fff; color: #000; }
+body.dark .add-btn:hover   { background: #ddd; }
+body.dark .form-bar input::placeholder { color: #555; }
+
+/* ── theme toggle button ── */
+#theme-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#theme-icon           { width: 18px; height: 18px; display: block; filter: invert(1); }
+body.dark #theme-icon { filter: invert(1); }
+
+/* ── tooltip ── */
+.tooltip {
+  display: none;
+  position: fixed;
+  background: #000;
+  color: #fff;
+  font-size: 11px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  max-width: 240px;
+  line-height: 1.5;
+  pointer-events: none;
+  z-index: 999;
 }
 
-img {
-	max-width: 100%;
-	height:  auto;
+/* ── fixed bottom form bar ── */
+.form-bar {
+  display: flex;
+  border-top: 1px solid #000;
+  flex-shrink: 0;
+  height: 44px;
 }
-
-/* uncomment the code below to set the grid */
-
-/*#grid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
+.form-bar > * {
+  border-right: 1px solid #000;
+  padding: 0 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  background: #fff;
+  color: #000;
+  outline: none;
+  display: flex;
+  align-items: center;
 }
+.form-bar > *:last-child { border-right: none; }
+.form-bar input { border: none; }
+.form-bar input::placeholder { color: #aaa; }
 
-body {
-	overflow: hidden;
+.form-label    { white-space: nowrap; flex-shrink: 0; }
+.name-input    { width: 160px; flex-shrink: 0; }
+.url-input     { flex: 1; }
+.author-input  { width: 140px; flex-shrink: 0; }
+.comment-input { width: 200px; flex-shrink: 0; }
+
+.add-btn {
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-weight: bold;
+  background: #000;
+  color: #fff;
 }
-
-.scroll {
-	padding:  20px;
-	overflow: scroll;
-	height: 100vh;
-}
-
-#left-column {
-}
-
-#right-column {
-	background: #333;
-}*/
+.add-btn:hover { background: #333; }
