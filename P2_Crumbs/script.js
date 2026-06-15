@@ -195,14 +195,13 @@ function renderCrumb(data, isNew = false) {
 
   let w, h;
   if (isNew) {
-    w = 15 + Math.random() * 16;
-    h = 8  + Math.random() * 12;
+    w = 15 + Math.random() * 20;
+    h = 15 + Math.random() * 15;
   } else {
     const roll = Math.random();
-    if      (roll < 0.35) { w = 10 + Math.random() * 5;  h = 7 + Math.random() * 5; }
-    else if (roll < 0.68) { w = 6  + Math.random() * 10; h = 4 + Math.random() * 7; }
-    else if (roll < 0.88) { w = 15 + Math.random() * 16; h = 8 + Math.random() * 12; }
-    else                  { w = 28 + Math.random() * 20; h = 14 + Math.random() * 16; }
+    if      (roll < 0.40) { w = 10 + Math.random() * 8;  h = 10 + Math.random() * 6; }
+    else if (roll < 0.75) { w = 16 + Math.random() * 10; h = 14 + Math.random() * 8; }
+    else                  { w = 24 + Math.random() * 11; h = 20 + Math.random() * 10; }
   }
 
   const area = document.getElementById('crumb-area');
@@ -219,11 +218,7 @@ function renderCrumb(data, isNew = false) {
   el.style.width     = w + 'px';
   el.style.height    = h + 'px';
   el.style.setProperty('--rot', Math.floor(Math.random() * 360) + 'deg');
-  if (w < 5) {
-    el.style.borderRadius = '40% 60% 55% 45% / 55% 45% 60% 40%';
-  } else {
-    el.style.clipPath = randomCrumbClip();
-  }
+  el.style.clipPath = randomCrumbClip();
 
   const tip = document.getElementById('tooltip');
   el.addEventListener('mouseenter', () => {
