@@ -163,7 +163,7 @@ function renderCrumb(data, isNew = false) {
 
   const roll = Math.random();
   let w, h;
-  if      (roll < 0.35) { w = 2  + Math.random() * 4;  h = 2 + Math.random() * 3; }
+  if      (roll < 0.35) { w = 5  + Math.random() * 5;  h = 4 + Math.random() * 4; }
   else if (roll < 0.68) { w = 6  + Math.random() * 10; h = 4 + Math.random() * 7; }
   else if (roll < 0.88) { w = 15 + Math.random() * 16; h = 8 + Math.random() * 12; }
   else                  { w = 28 + Math.random() * 20; h = 14 + Math.random() * 16; }
@@ -175,7 +175,7 @@ function renderCrumb(data, isNew = false) {
   el.style.width     = w + 'px';
   el.style.height    = h + 'px';
   el.style.setProperty('--rot', Math.floor(Math.random() * 360) + 'deg');
-  if (w < 7) {
+  if (w < 5) {
     el.style.borderRadius = '40% 60% 55% 45% / 55% 45% 60% 40%';
   } else {
     el.style.clipPath = randomCrumbClip();
