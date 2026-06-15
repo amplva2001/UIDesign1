@@ -174,7 +174,7 @@ function renderCrumb(data, isNew = false) {
   el.style.top       = y + 'px';
   el.style.width     = w + 'px';
   el.style.height    = h + 'px';
-  el.style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
+  el.style.setProperty('--rot', Math.floor(Math.random() * 360) + 'deg');
   if (w < 7) {
     el.style.borderRadius = '40% 60% 55% 45% / 55% 45% 60% 40%';
   } else {

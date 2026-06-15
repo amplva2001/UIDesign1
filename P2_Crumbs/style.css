@@ -53,11 +53,12 @@ body {
   position: absolute;
   background: #000;
   cursor: pointer;
+  transform: rotate(var(--rot, 0deg));
   transition: transform 150ms, box-shadow 150ms;
   user-select: none;
 }
 .crumb:hover {
-  transform: scale(1.25);
+  transform: rotate(var(--rot, 0deg)) scale(1.25);
   z-index: 999;
 }
 
