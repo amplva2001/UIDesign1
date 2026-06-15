@@ -66,12 +66,8 @@ body {
   to { transform: rotate(360deg); }
 }
 @keyframes crumb-ping {
-  0%   { transform: scale(1);   opacity: 0.85; }
-  100% { transform: scale(4.5); opacity: 0; }
-}
-@keyframes crumb-ring-fade {
-  0%, 65% { opacity: 1; }
-  100%     { opacity: 0; }
+  0%   { transform: scale(1);   opacity: 0.8; }
+  100% { transform: scale(5);   opacity: 0; }
 }
 
 .crumb.newest {
@@ -82,26 +78,27 @@ body {
 .crumb.newest::before {
   content: '';
   position: absolute;
-  inset: -4px;
+  inset: -5px;
   border-radius: 50%;
-  background: var(--ray-color, #ff69b4);
-  animation: crumb-ping 1s ease-out infinite;
+  border: 2px solid var(--ray-color, #ff69b4);
+  background: transparent;
+  animation: crumb-ping 1.2s ease-out infinite;
   pointer-events: none;
 }
 
-/* spinning dashed ring */
+/* spinning dashed ring — no fade, removed by JS after 24h */
 .crumb.newest::after {
   content: '';
   position: absolute;
-  width: 52px;
-  height: 52px;
+  width: 54px;
+  height: 54px;
   top: 50%;
   left: 50%;
-  margin-top: -26px;
-  margin-left: -26px;
+  margin-top: -27px;
+  margin-left: -27px;
   border: 2.5px dashed var(--ray-color, #ff69b4);
   border-radius: 50%;
-  animation: crumb-spin 2s linear infinite, crumb-ring-fade 6s ease-out forwards;
+  animation: crumb-spin 2s linear infinite;
   pointer-events: none;
 }
 

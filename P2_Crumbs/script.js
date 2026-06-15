@@ -184,16 +184,22 @@ function renderCrumb(data, isNew = false) {
   });
   el.addEventListener('click', () => window.open(href, '_blank'));
 
+  el.dataset.color = color;
   document.getElementById('crumb-area').appendChild(el);
   crumbCount++;
   document.getElementById('stat-crumbs').textContent = crumbCount;
 
   if (isNew) {
-    document.querySelectorAll('.crumb.newest').forEach(c => c.classList.remove('newest'));
-    el.style.setProperty('--ray-color', color);
-    el.classList.add('newest');
-    setTimeout(() => el.classList.remove('newest'), 5000);
+    markNewest(el, color);
+    localStorage.setItem('newestCrumb', JSON.stringify({ color, addedAt: Date.now() }));
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
+}
+
+function markNewest(el, color) {
+  document.querySelectorAll('.crumb.newest').forEach(c => c.classList.remove('newest'));
+  el.style.setProperty('--ray-color', color);
+  el.classList.add('newest');
 }
 
 // ── Add crumb ─────────────────────────────────────────────────────────────────
@@ -254,6 +260,14 @@ window.addEventListener('load', async () => {
 
   if (approved && approved.length > 0) {
     approved.forEach(renderCrumb);
+    const entry = JSON.parse(localStorage.getItem('newestCrumb') || 'null');
+    if (entry && Date.now() - entry.addedAt < 86400000) {
+      const match = document.querySelector(`.crumb[data-color="${entry.color}"]`);
+      if (match) {
+        markNewest(match, entry.color);
+        match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
   } else {
     const saved = loadSaved();
     if (saved.length > 0) {
