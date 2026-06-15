@@ -20,6 +20,21 @@ themeBtn.addEventListener('click', () => {
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 });
 
+// ── Site age (counting since first commit 2026-03-10) ────────────────────────
+const SITE_BIRTH = new Date('2026-03-10').getTime();
+
+function updateAge() {
+  const diff = Math.floor((Date.now() - SITE_BIRTH) / 1000);
+  const d = Math.floor(diff / 86400);
+  const h = String(Math.floor((diff % 86400) / 3600)).padStart(2, '0');
+  const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+  const s = String(diff % 60).padStart(2, '0');
+  document.getElementById('stat-age').textContent = `${d}d ${h}:${m}:${s}`;
+}
+
+updateAge();
+setInterval(updateAge, 1000);
+
 // ── Timer (persists across refreshes within the same tab) ─────────────────────
 if (!sessionStorage.getItem('crumbs_start')) {
   sessionStorage.setItem('crumbs_start', Date.now());
@@ -178,12 +193,17 @@ let crumbCount = 0;
 function renderCrumb(data, isNew = false) {
   const { name, href, author, comment, timestamp, x, y, color } = data;
 
-  const roll = Math.random();
   let w, h;
-  if      (roll < 0.35) { w = 10 + Math.random() * 5;  h = 7 + Math.random() * 5; }
-  else if (roll < 0.68) { w = 6  + Math.random() * 10; h = 4 + Math.random() * 7; }
-  else if (roll < 0.88) { w = 15 + Math.random() * 16; h = 8 + Math.random() * 12; }
-  else                  { w = 28 + Math.random() * 20; h = 14 + Math.random() * 16; }
+  if (isNew) {
+    w = 15 + Math.random() * 16;
+    h = 8  + Math.random() * 12;
+  } else {
+    const roll = Math.random();
+    if      (roll < 0.35) { w = 10 + Math.random() * 5;  h = 7 + Math.random() * 5; }
+    else if (roll < 0.68) { w = 6  + Math.random() * 10; h = 4 + Math.random() * 7; }
+    else if (roll < 0.88) { w = 15 + Math.random() * 16; h = 8 + Math.random() * 12; }
+    else                  { w = 28 + Math.random() * 20; h = 14 + Math.random() * 16; }
+  }
 
   const area = document.getElementById('crumb-area');
   const areaW = area.offsetWidth || window.innerWidth;

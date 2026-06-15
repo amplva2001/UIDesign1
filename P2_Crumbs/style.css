@@ -15,7 +15,7 @@ body {
 /* ── top stats bar ── */
 .stats-bar {
   display: grid;
-  grid-template-columns: repeat(8, 1fr) auto;
+  grid-template-columns: repeat(10, 1fr) auto;
   border-bottom: 1px solid #000;
   flex-shrink: 0;
 }
@@ -68,10 +68,24 @@ body {
   to   { filter: hue-rotate(360deg); }
 }
 
+@keyframes crumb-glow {
+  0%, 100% { box-shadow: 0 0 6px 2px var(--ray-color, #ff69b4); }
+  50%       { box-shadow: 0 0 18px 7px var(--ray-color, #ff69b4); }
+}
+
 .crumb.newest {
   background: var(--ray-color, #ff69b4) !important;
-  animation: crumb-hue 1.5s linear infinite;
+  animation: crumb-hue 1.5s linear infinite, crumb-glow 1.5s ease-in-out infinite;
   z-index: 100;
+}
+
+body.dark .crumb.newest {
+  animation: crumb-hue 1.5s linear infinite, crumb-glow-dark 1.5s ease-in-out infinite;
+}
+
+@keyframes crumb-glow-dark {
+  0%, 100% { box-shadow: 0 0 12px 5px var(--ray-color, #ff69b4), 0 0 28px 10px var(--ray-color, #ff69b4); }
+  50%       { box-shadow: 0 0 24px 10px var(--ray-color, #ff69b4), 0 0 50px 20px var(--ray-color, #ff69b4); }
 }
 
 /* ── dark mode ── */
