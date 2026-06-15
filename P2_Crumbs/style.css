@@ -62,20 +62,15 @@ body {
 }
 
 /* ── newest crumb highlight ── */
-@keyframes crumb-spin {
-  to { transform: rotate(360deg); }
+@keyframes crumb-hue {
+  from { filter: hue-rotate(0deg); }
+  to   { filter: hue-rotate(360deg); }
 }
 
-.crumb.newest { z-index: 100; }
-
-.crumb-spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -25px;
-  margin-left: -25px;
-  pointer-events: none;
-  animation: crumb-spin 0.8s steps(8) infinite;
+.crumb.newest {
+  background: var(--ray-color, #ff69b4) !important;
+  animation: crumb-hue 1.5s linear infinite;
+  z-index: 100;
 }
 
 /* ── dark mode ── */
