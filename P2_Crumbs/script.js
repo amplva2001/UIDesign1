@@ -20,9 +20,11 @@ themeBtn.addEventListener('click', () => {
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 });
 
-// ── Timer ─────────────────────────────────────────────────────────────────────
-let secs = 0;
-document.getElementById('stat-visited').textContent = 1;
+// ── Timer (persists across refreshes within the same tab) ─────────────────────
+if (!sessionStorage.getItem('crumbs_start')) {
+  sessionStorage.setItem('crumbs_start', Date.now());
+}
+let secs = Math.floor((Date.now() - parseInt(sessionStorage.getItem('crumbs_start'))) / 1000);
 
 setInterval(() => {
   secs++;
@@ -30,6 +32,21 @@ setInterval(() => {
   const s = String(secs % 60).padStart(2, '0');
   document.getElementById('stat-time').textContent = m + ':' + s;
 }, 1000);
+
+// ── Visit counter ─────────────────────────────────────────────────────────────
+function recordVisit() {
+  const cbName = '__visit_cb__';
+  window[cbName] = (count) => {
+    delete window[cbName];
+    document.getElementById('visit-script')?.remove();
+    document.getElementById('stat-visited').textContent = count;
+  };
+  const script = document.createElement('script');
+  script.id  = 'visit-script';
+  script.src = SCRIPT_URL + '?action=visit&callback=' + cbName;
+  script.onerror = () => { delete window[cbName]; script.remove(); };
+  document.head.appendChild(script);
+}
 
 // ── Cookie facts per domain ───────────────────────────────────────────────────
 const FACTS = {
@@ -273,6 +290,7 @@ document.getElementById('url-input').addEventListener('keydown', e => {
 
 // ── On load ───────────────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
+  recordVisit();
   const approved = await fetchApproved();
 
   if (approved && approved.length > 0) {
