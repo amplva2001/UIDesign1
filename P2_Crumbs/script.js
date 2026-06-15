@@ -185,10 +185,17 @@ function renderCrumb(data, isNew = false) {
   else if (roll < 0.88) { w = 15 + Math.random() * 16; h = 8 + Math.random() * 12; }
   else                  { w = 28 + Math.random() * 20; h = 14 + Math.random() * 16; }
 
+  const area = document.getElementById('crumb-area');
+  const areaW = area.offsetWidth || window.innerWidth;
+  const areaH = Math.max(area.offsetHeight, 700);
+  const pad = 48;
+  const safeX = Math.min(Math.max(pad, x), areaW - pad - w);
+  const safeY = Math.min(Math.max(pad, y), areaH - pad - h);
+
   const el = document.createElement('div');
   el.className       = 'crumb';
-  el.style.left      = x + 'px';
-  el.style.top       = y + 'px';
+  el.style.left      = safeX + 'px';
+  el.style.top       = safeY + 'px';
   el.style.width     = w + 'px';
   el.style.height    = h + 'px';
   el.style.setProperty('--rot', Math.floor(Math.random() * 360) + 'deg');
@@ -209,8 +216,9 @@ function renderCrumb(data, isNew = false) {
     tip.style.display    = 'block';
   });
   el.addEventListener('mousemove', e => {
-    tip.style.left = (e.clientX + 14) + 'px';
-    tip.style.top  = (e.clientY + 14) + 'px';
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    tip.style.left = (e.clientX + 14 + tw > window.innerWidth  ? e.clientX - tw - 14 : e.clientX + 14) + 'px';
+    tip.style.top  = (e.clientY + 14 + th > window.innerHeight ? e.clientY - th - 14 : e.clientY + 14) + 'px';
   });
   el.addEventListener('mouseleave', () => {
     el.style.boxShadow = '';
