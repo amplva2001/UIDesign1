@@ -70,9 +70,17 @@ function randomColor() {
   return '#' + h() + h() + h();
 }
 
-function randomBlobShape() {
-  const p = () => (Math.floor(Math.random() * 45) + 20) + '%';
-  return `${p()} ${p()} ${p()} ${p()} / ${p()} ${p()} ${p()} ${p()}`;
+function randomCrumbClip() {
+  const n = 5 + Math.floor(Math.random() * 4);
+  const pts = [];
+  for (let i = 0; i < n; i++) {
+    const angle = (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 1.1;
+    const r = 20 + Math.random() * 44;
+    const x = Math.max(0, Math.min(100, Math.round(50 + r * Math.cos(angle))));
+    const y = Math.max(0, Math.min(100, Math.round(50 + r * Math.sin(angle))));
+    pts.push(`${x}% ${y}%`);
+  }
+  return `polygon(${pts.join(', ')})`;
 }
 
 function formatDate(d) {
@@ -153,16 +161,25 @@ let crumbCount = 0;
 function renderCrumb(data, isNew = false) {
   const { name, href, author, comment, timestamp, x, y, color } = data;
 
-  const w = 14 + Math.random() * 32;
-  const h = 10 + Math.random() * 22;
+  const roll = Math.random();
+  let w, h;
+  if      (roll < 0.35) { w = 2  + Math.random() * 4;  h = 2 + Math.random() * 3; }
+  else if (roll < 0.68) { w = 6  + Math.random() * 10; h = 4 + Math.random() * 7; }
+  else if (roll < 0.88) { w = 15 + Math.random() * 16; h = 8 + Math.random() * 12; }
+  else                  { w = 28 + Math.random() * 20; h = 14 + Math.random() * 16; }
 
   const el = document.createElement('div');
-  el.className          = 'crumb';
-  el.style.left         = x + 'px';
-  el.style.top          = y + 'px';
-  el.style.width        = w + 'px';
-  el.style.height       = h + 'px';
-  el.style.borderRadius = randomBlobShape();
+  el.className       = 'crumb';
+  el.style.left      = x + 'px';
+  el.style.top       = y + 'px';
+  el.style.width     = w + 'px';
+  el.style.height    = h + 'px';
+  el.style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
+  if (w < 7) {
+    el.style.borderRadius = '40% 60% 55% 45% / 55% 45% 60% 40%';
+  } else {
+    el.style.clipPath = randomCrumbClip();
+  }
 
   const tip = document.getElementById('tooltip');
   el.addEventListener('mouseenter', () => {
