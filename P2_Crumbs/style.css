@@ -80,7 +80,7 @@ body.dark .stats-bar       { border-color: #333; }
 body.dark #canvas          { background: #000; }
 body.dark .intro-text p    { color: #ccc; }
 body.dark #crumb-area      { border-color: #222; }
-body.dark .crumb           { background: #fff; }
+body.dark .crumb           { background: #fff !important; }
 body.dark .form-bar        { background: #000; border-color: #333; }
 body.dark .form-bar > *    { background: #000; color: #fff; border-color: #333; }
 body.dark .add-btn         { background: #fff; color: #000; }
