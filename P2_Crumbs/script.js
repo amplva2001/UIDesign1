@@ -150,7 +150,7 @@ document.getElementById('modal-close').addEventListener('click', () => {
 // ── Render a crumb ────────────────────────────────────────────────────────────
 let crumbCount = 0;
 
-function renderCrumb(data) {
+function renderCrumb(data, isNew = false) {
   const { name, href, author, comment, timestamp, x, y, color } = data;
 
   const w = 14 + Math.random() * 32;
@@ -187,6 +187,13 @@ function renderCrumb(data) {
   document.getElementById('crumb-area').appendChild(el);
   crumbCount++;
   document.getElementById('stat-crumbs').textContent = crumbCount;
+
+  if (isNew) {
+    document.querySelectorAll('.crumb.newest').forEach(c => c.classList.remove('newest'));
+    el.style.setProperty('--ray-color', color);
+    el.classList.add('newest');
+    setTimeout(() => el.classList.remove('newest'), 5000);
+  }
 }
 
 // ── Add crumb ─────────────────────────────────────────────────────────────────
@@ -227,8 +234,8 @@ async function addCrumb(nameOverride, urlOverride, authorOverride, commentOverri
     pendingModal.hidden = false;
   } catch {
     saveLocal(data);
-    renderCrumb(data);
   }
+  renderCrumb(data, true);
 
   if (!urlOverride)  urlEl.value  = '';
   if (!nameOverride) nameEl.value = '';

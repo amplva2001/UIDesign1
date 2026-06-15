@@ -61,6 +61,36 @@ body {
   z-index: 999;
 }
 
+/* ── newest crumb rays ── */
+@keyframes crumb-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes crumb-rays-fade {
+  0%   { opacity: 1; }
+  60%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.crumb.newest {
+  z-index: 100;
+}
+.crumb.newest::before {
+  content: '';
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  top: 50%;
+  left: 50%;
+  margin-top: -28px;
+  margin-left: -28px;
+  border-radius: 50%;
+  background: var(--ray-color, #ff69b4);
+  -webkit-mask-image: repeating-conic-gradient(black 0deg 6deg, transparent 6deg 30deg);
+  mask-image: repeating-conic-gradient(black 0deg 6deg, transparent 6deg 30deg);
+  animation: crumb-spin 1.2s linear infinite, crumb-rays-fade 5s ease-out forwards;
+  pointer-events: none;
+}
+
 /* ── dark mode ── */
 body.dark { background: #000; color: #fff; }
 body.dark .stats-bar > div { border-color: #333; }
