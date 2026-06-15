@@ -197,9 +197,36 @@ function renderCrumb(data, isNew = false) {
 }
 
 function markNewest(el, color) {
-  document.querySelectorAll('.crumb.newest').forEach(c => c.classList.remove('newest'));
-  el.style.setProperty('--ray-color', color);
+  document.querySelectorAll('.crumb.newest').forEach(c => {
+    c.classList.remove('newest');
+    c.querySelector('.crumb-spinner')?.remove();
+  });
   el.classList.add('newest');
+
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('class', 'crumb-spinner');
+  svg.setAttribute('viewBox', '0 0 50 50');
+  svg.setAttribute('width', '50');
+  svg.setAttribute('height', '50');
+
+  const count = 8;
+  for (let i = 0; i < count; i++) {
+    const angle = (i / count) * Math.PI * 2;
+    const cx = 25, cy = 25, r1 = 13, r2 = 21;
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('x1', (cx + r1 * Math.sin(angle)).toFixed(2));
+    line.setAttribute('y1', (cy - r1 * Math.cos(angle)).toFixed(2));
+    line.setAttribute('x2', (cx + r2 * Math.sin(angle)).toFixed(2));
+    line.setAttribute('y2', (cy - r2 * Math.cos(angle)).toFixed(2));
+    line.setAttribute('stroke', color);
+    line.setAttribute('stroke-width', '3');
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('opacity', ((i + 1) / count).toFixed(2));
+    svg.appendChild(line);
+  }
+
+  el.appendChild(svg);
 }
 
 // ── Add crumb ─────────────────────────────────────────────────────────────────

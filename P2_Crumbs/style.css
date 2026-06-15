@@ -65,41 +65,17 @@ body {
 @keyframes crumb-spin {
   to { transform: rotate(360deg); }
 }
-@keyframes crumb-ping {
-  0%   { transform: scale(1);   opacity: 0.8; }
-  100% { transform: scale(5);   opacity: 0; }
-}
 
-.crumb.newest {
-  z-index: 100;
-}
+.crumb.newest { z-index: 100; }
 
-/* pulsing expanding ring */
-.crumb.newest::before {
-  content: '';
+.crumb-spinner {
   position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  border: 2px solid var(--ray-color, #ff69b4);
-  background: transparent;
-  animation: crumb-ping 1.2s ease-out infinite;
-  pointer-events: none;
-}
-
-/* spinning dashed ring — no fade, removed by JS after 24h */
-.crumb.newest::after {
-  content: '';
-  position: absolute;
-  width: 54px;
-  height: 54px;
   top: 50%;
   left: 50%;
-  margin-top: -27px;
-  margin-left: -27px;
-  border: 2.5px dashed var(--ray-color, #ff69b4);
-  border-radius: 50%;
-  animation: crumb-spin 2s linear infinite;
+  margin-top: -25px;
+  margin-left: -25px;
   pointer-events: none;
+  animation: crumb-spin 0.8s steps(8) infinite;
 }
 
 /* ── dark mode ── */
