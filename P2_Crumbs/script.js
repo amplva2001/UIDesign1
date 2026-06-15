@@ -163,7 +163,7 @@ function renderCrumb(data, isNew = false) {
 
   const roll = Math.random();
   let w, h;
-  if      (roll < 0.35) { w = 5  + Math.random() * 5;  h = 4 + Math.random() * 4; }
+  if      (roll < 0.35) { w = 10 + Math.random() * 5;  h = 7 + Math.random() * 5; }
   else if (roll < 0.68) { w = 6  + Math.random() * 10; h = 4 + Math.random() * 7; }
   else if (roll < 0.88) { w = 15 + Math.random() * 16; h = 8 + Math.random() * 12; }
   else                  { w = 28 + Math.random() * 20; h = 14 + Math.random() * 16; }
