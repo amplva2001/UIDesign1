@@ -6,6 +6,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: none;
 }
 /* Outer background is the OPPOSITE of the animation */
 body.dark  { background: #ffffff; }
