@@ -50,6 +50,117 @@ img {
 	height: auto;
 }
 
+/* Collage */
+.collage {
+	position: relative;
+	width: 100%;
+	margin-bottom: 100px;
+}
+
+
+/* Reset global img margins inside collage */
+.collage img {
+	margin: 0;
+	display: block;
+}
+
+/* Layer 0 — background photos, in normal flow, sets container height */
+.collage-bg {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	overflow: hidden;
+}
+
+/* Photos sized by height so they never exceed the viewport */
+.c-baby {
+	height: min(100vh, 60vw);
+	width: auto;
+	flex-shrink: 0;
+	position: relative;
+	z-index: 2;
+}
+
+.c-me {
+	height: min(100vh, 60vw);
+	width: auto;
+	flex-shrink: 0;
+	margin-left: -80px;
+	position: relative;
+	z-index: 1;
+}
+
+/* Layer 1 & 2 — absolutely positioned divs on top */
+.c-layer {
+	position: absolute;
+	z-index: 5;
+}
+
+.c-layer img  { max-width: 100%; }
+.c-layer p    { font-size: 16px; line-height: 1.5; margin: 0; }
+
+/* Accent image positions */
+.c-moose-layer {
+	top: 10px; left: 40%;
+	width: 28%;
+	transform: rotate(4deg);
+	z-index: 0;
+}
+
+.c-sundae-layer {
+	top: 140px; right: 10%;
+	width: 16%;
+	z-index: 0;
+	transform: rotate(5deg);
+}
+.c-sundae-layer img {
+	border-radius: 50%;
+	object-fit: cover;
+	aspect-ratio: 1;
+	width: 100%;
+}
+
+.c-skallgubbar-layer {
+	bottom: 40px; left: 50%;
+	width: 26%;
+	transform: translateX(-50%) rotate(-2deg);
+	z-index: 5;
+}
+
+/* Text label positions */
+.c-song-layer {
+	position: absolute;
+	top: 18px;
+	left: 100px;
+	transform: rotate(-3deg);
+}
+.c-food-layer {
+	position: absolute;
+	top: 120px;
+	right: 30%;
+	text-align: right;
+	transform: rotate(8deg);
+}
+.c-website-layer {
+	position: absolute;
+	bottom: 0.1px;
+	left: 50%;
+	transform: translateX(-50%) rotate(-1deg);
+	white-space: nowrap;
+	z-index: 8;
+}
+
+body.dark .c-layer p { color: #ffffff; }
+
+@media (max-width: 1000px) {
+	.c-layer p       { font-size: 13px; }
+	.c-moose-layer   { width: 20%; }
+	.c-sundae-layer  { width: 11%; }
+	.c-skallgubbar-layer { width: 18%; }
+	.c-song-layer    { left: 20px; top: 10px; }
+	.c-food-layer    { top: 60px; }
+}
+
 body {
 	font-family: 'JetBrains Mono', monospace;
 	font-weight: 30;
@@ -65,12 +176,27 @@ body.dark {
 }
 
 .infotext-container {
-	max-width: 1130px;
+	width: 100%;
+	margin-bottom: 80px;
 }
 
 p, li {
-	font-size:  16px;
+	font-size: 16px;
 	line-height: 30px;
+}
+
+.infotext-container h1 {
+	font-size: 40px;
+	white-space: nowrap;
+	margin-bottom: 40;
+}
+
+.infotext-container p {
+	font-size: 18px;
+	line-height: 1.6;
+	text-align: justify;
+	margin-top: 10px;
+	margin-bottom: 50px;
 }
 
 /* adjusting spacing */
@@ -81,6 +207,10 @@ p, li {
 
 h1, p {
 	margin-bottom:  10px;
+}
+
+h3 {
+	margin-bottom: 20px;
 }
 
 ul, ol {
@@ -113,29 +243,13 @@ body.dark a:hover {
 	color: #ff69b4;
 }
 
-/* Wave hover animation */
-
-.wave-text span {
-	display: inline-block;
-	animation: wave-bounce 0.8s cubic-bezier(0.37, 0, 0.63, 1) infinite;
-	animation-play-state: paused;
-}
-
-.wave-text:hover span {
-	animation-play-state: running;
-}
-
-@keyframes wave-bounce {
-	0%, 100% { transform: translateY(0); }
-	50% { transform: translateY(-8px); }
-}
 
 /* Project cards */
 
 .project-cards {
 	display: flex;
 	gap: 16px;
-	margin-bottom: 30px;
+	margin-bottom: 50px;
 }
 
 .project-card {
@@ -143,11 +257,13 @@ body.dark a:hover {
 	color: #111111;
 	border: 1.5px solid #111111;
 	border-radius: 20px;
-	padding: 24px 20px;
+	padding: 28px 20px;
 	flex: 1;
+	aspect-ratio: 1 / 1;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	justify-content: center;
 	text-align: center;
 	text-decoration: none;
 	font-weight: normal;
@@ -171,10 +287,14 @@ body.dark a:hover {
 }
 
 .project-card img {
-	width: 90px;
-	height: 90px;
+	width: 60%;
+	height: auto;
 	object-fit: contain;
 	margin: 0;
+}
+
+.project-card img[alt="Ascii Town"] {
+	width: 75%;
 }
 
 .project-card .card-name {
@@ -210,6 +330,42 @@ body.dark .project-card img[alt="Moments"] {
 
 .project-card img[alt="Crumbs"] { filter: invert(0); }
 body.dark .project-card img[alt="Crumbs"] { filter: invert(1); }
+
+.project-card img[alt="Ascii Town"] { filter: invert(0); }
+body.dark .project-card img[alt="Ascii Town"] { filter: invert(1); }
+
+/* Footer signature */
+
+#site-footer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	margin-top: 40px;
+	margin-bottom: 20px;
+	opacity: 0.4;
+}
+
+#footer-sig {
+	width: 60px;
+	height: auto;
+	margin: 0 0 6px 0;
+}
+
+#site-footer p {
+	font-size: 12px;
+	line-height: 1.4;
+	margin: 0;
+	color: #111111;
+}
+
+body.dark #site-footer p {
+	color: #ffffff;
+}
+
+body.dark #footer-sig {
+	filter: invert(1);
+}
 
 /* Dark mode toggle button */
 

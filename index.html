@@ -17,32 +17,54 @@
 
       <!-- about me-->
     <div class="infotext-container"> 
-      <h1 class="wave-text">Amma</h1>
-      <p class="desc wave-text">Hei!
+      <h1>Amma</h1>
+      <p class="desc">Hei!
         I am an exchange student from Norway!🇳🇴 I am graduating next year, and my major is interaction/service design!✨
         I love going hiking in the mountains and i recently got into fishing!⛰️
         If you know any good fishing spots in Seoul please hit me up! 🎣 🐟
       </p>
     </div> 
 
-      <!-- photos of me-->
-      <div class="photo-container">
-        <img src="assets/photos/Fisk_babyme.png" alt="Album art" />
-        <img src="assets/photos/Fisk_me.png" alt="Litten GIF" />
-      </div>
+      <!-- collage -->
+      <div class="collage">
 
-      <ul>
-        <li>My favorite food is 순대 + 소금 </li>
-        <li>My favorite song is 🫎 <a href="https://open.spotify.com/track/5ZEFCkDFX8i6AeT60V5b0q?si=567989f841324620"> Jeg har aldri sett elg </a></li>
-        <li>My favorite website is 💀 <a href="https://skalgubbar.se"> Skalgubbar  </a></li>
-      </ul>
+        <!-- layer 0: background photos — drives the container height -->
+        <div class="collage-bg">
+          <img class="c-baby" src="assets/photos/Fisk_babyme.png" alt="Young me" />
+          <img class="c-me"   src="assets/photos/Fisk_me.png"     alt="Me fishing" />
+        </div>
+
+        <!-- layer 1: accent images -->
+        <div class="c-layer c-moose-layer">
+          <img src="assets/photos/moose.png" alt="Moose" />
+        </div>
+        <div class="c-layer c-sundae-layer">
+          <img src="assets/photos/Sundae.png" alt="Sundae" />
+        </div>
+        <div class="c-layer c-skallgubbar-layer">
+          <img src="assets/photos/skallgubbar.png" alt="Skallgubbar" />
+        </div>
+
+        <!-- layer 2: text labels -->
+        <div class="c-layer c-song-layer">
+          <p>My favorite song is 🫎 <a href="https://open.spotify.com/track/5ZEFCkDFX8i6AeT60V5b0q?si=567989f841324620">JEG HAR ALDRI SETT ELG</a></p>
+        </div>
+        <div class="c-layer c-food-layer">
+          <p>My favorite food is 순대 + 소금</p>
+        </div>
+        <div class="c-layer c-website-layer">
+          <p>My favorite website is 💀 <a href="https://skalgubbar.se">SKALGUBBAR</a></p>
+        </div>
+
+      </div>
       
       <h3>Exercises</h3>
-      <ul>
-        <li>ASCII <a href="ascii/exterior-amalievallner.html">Town</a></li>
-      </ul>
 
       <div class="project-cards">
+        <a class="project-card" href="ascii/exterior-amalievallner.html">
+          <span class="card-label">Ascii town</span>
+          <img src="assets/photos/ascii.png" alt="Ascii Town" />
+        </a>
         <a class="project-card" href="https://www.figma.com/proto/gQEFPnRh4MPP939eYOEY2B/2026-UI-prog-P1-Final-Crit?node-id=31-3181&viewport=279%2C339%2C0.03&t=yfyQnRO5wvSWQYuu-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=2%3A1070&show-proto-sidebar=1&page-id=0%3A1">
           <span class="card-label">P1 Personal Utility</span>
           <img src="assets/photos/Moments.png" alt="Moments" />
@@ -70,18 +92,14 @@
         <img src="assets/photos/Litten.gif" alt="Album art" />
       </div>
 
+  <footer id="site-footer">
+    <img src="assets/photos/signature.png" alt="Signature" id="footer-sig" />
+    <p>Last updated</p>
+    <p>21.06.26</p>
+  </footer>
+
   <script type="text/javascript" src="assets/script.js"></script>
 
-  <script>
-    const segmenter = new Intl.Segmenter();
-    document.querySelectorAll('.wave-text').forEach(el => {
-      const text = el.textContent.replace(/\s+/g, ' ').trim();
-      const chars = [...segmenter.segment(text)].map(s => s.segment);
-      el.innerHTML = chars.map((char, i) =>
-        `<span style="animation-delay:${i * 0.04}s">${char === ' ' ? '&nbsp;' : char}</span>`
-      ).join('');
-    });
-  </script>
 
 </body>
 </html>
