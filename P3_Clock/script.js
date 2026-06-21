@@ -164,8 +164,8 @@ class Particle {
     this.color       = activeCat.color;
     this.turb        = 0;
     this.maxVx       = 0;
-    this.riseSpeed   = Math.random() * CELL * (0.3 + aqiFrac * 1.5);
-    this.driftSpeed  = (Math.random() - 0.5) * CELL * (1 + aqiFrac * 2);
+    this.riseSpeed   = Math.pow(Math.random(), 4) * CELL * (0.8 + aqiFrac * 2.5);
+    this.driftSpeed  = (Math.random() - 0.5) * this.riseSpeed * 1.5;
   }
   update() {
     this.life++;
@@ -313,6 +313,15 @@ function secondTick() {
   for (const p of particles) {
     p.y -= p.riseSpeed;
     p.x += p.driftSpeed + (Math.random() - 0.5) * CELL * 0.4;
+    p.x += (pipeX - p.x) * 0.08; // gentle pull toward center
+
+    // Shape scales with AQI: oval for low, wide cone for high
+    const heightAbove = Math.max(0, collarTopY - p.y);
+    const fraction    = heightAbove / collarTopY;
+    const aqiFrac     = Math.min(currentAqi / 300, 1);
+    const shapeFrac   = aqiFrac * fraction + (1 - aqiFrac) * Math.sin(Math.PI * fraction);
+    const halfWidth   = pipeW / 2 + canvas.width * (0.12 + aqiFrac * 0.30) * shapeFrac;
+    p.x = Math.max(pipeX - halfWidth, Math.min(pipeX + halfWidth, p.x));
   }
 
   if (secondsElapsed <= 10) {
