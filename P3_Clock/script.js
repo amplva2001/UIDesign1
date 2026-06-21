@@ -147,21 +147,25 @@ window.addEventListener('resize', resize);
 
 // ─── Particles ────────────────────────────────────────────────────────────────
 
-let particles = [];
-let activeCat = CATS[0] ?? CAT_DEFS[0];
-let emitAccum = 0;
+let particles  = [];
+let activeCat  = CATS[0] ?? CAT_DEFS[0];
+let emitAccum  = 0;
+let currentAqi = 0;
 
 class Particle {
   constructor() {
-    this.x       = pipeX + (Math.random() - 0.5) * pipeW * 0.72;
-    this.y       = collarTopY - 2;
-    this.vx      = (Math.random() - 0.5) * 0.3;
-    this.vy      = -(activeCat.speed * VY * (0.90 + Math.random() * 0.20));
-    this.life    = 0;
-    this.maxLife = activeCat.life * (0.82 + Math.random() * 0.36);
-    this.color   = activeCat.color;
-    this.turb    = activeCat.turb;
-    this.maxVx   = activeCat.maxVx;
+    const aqiFrac    = Math.min(currentAqi / 300, 1);
+    this.x           = pipeX + (Math.random() - 0.5) * pipeW * 0.8;
+    this.y           = collarTopY - CELL;
+    this.vx          = 0;
+    this.vy          = 0;
+    this.life        = 0;
+    this.maxLife     = 60 * 70;
+    this.color       = activeCat.color;
+    this.turb        = 0;
+    this.maxVx       = 0;
+    this.riseSpeed   = Math.random() * CELL * (0.3 + aqiFrac * 1.5);
+    this.driftSpeed  = (Math.random() - 0.5) * CELL * (1 + aqiFrac * 2);
   }
   update() {
     this.life++;
@@ -191,7 +195,6 @@ function render() {
   ctx.fillRect(0, 0, W, H);
 
   particles = particles.filter(p => { p.update(); return p.alive; });
-  emitStep();
 
   const occupied = new Set();
   const byColor  = new Map();
@@ -214,8 +217,9 @@ function render() {
   }
 
   ctx.fillStyle = dark ? '#ffffff' : '#000000';
-  ctx.fillRect(pipeX - collarW / 2, collarTopY,          collarW, collarH);
-  ctx.fillRect(pipeX - pipeW  / 2, collarTopY + collarH, pipeW,   H - collarTopY - collarH + 4);
+  const collarExtend = Math.round(PIX / 2);
+  ctx.fillRect(pipeX - collarW / 2, collarTopY - collarExtend, collarW, collarH + collarExtend);
+  ctx.fillRect(pipeX - pipeW  / 2, collarTopY + collarH,      pipeW,   H - collarTopY - collarH + 4);
 
   requestAnimationFrame(render);
 }
@@ -272,7 +276,10 @@ async function showCity(city) {
     const json = await res.json();
     const aqi  = json.current?.us_aqi ?? 0;
 
-    activeCat = getCat(aqi);
+    currentAqi     = aqi;
+    activeCat      = getCat(aqi);
+    particles      = [];
+    secondsElapsed = 0;
     setMode(isDaytime(city.lat, city.lon));
 
     const faceIdx = CAT_DEFS.findIndex(d => aqi <= d.maxAqi);
@@ -293,7 +300,33 @@ function nextCity() {
 }
 
 canvas.addEventListener('click', nextCity);
-setInterval(nextCity, 5_000);
+setInterval(nextCity, 60_000);
+
+// ─── Clock emission ───────────────────────────────────────────────────────────
+
+let secondsElapsed = 0;
+
+function secondTick() {
+  secondsElapsed++;
+
+  // Each particle moves at its own speed — slow ones stay near chimney, fast ones drift high
+  for (const p of particles) {
+    p.y -= p.riseSpeed;
+    p.x += p.driftSpeed + (Math.random() - 0.5) * CELL * 0.4;
+  }
+
+  if (secondsElapsed <= 10) {
+    // Build up to AQI count over 10 seconds
+    const burst = Math.ceil(currentAqi / 10);
+    for (let i = 0; i < burst; i++) particles.push(new Particle());
+  } else if (particles.length < currentAqi) {
+    // Keep chimney connected — refill as old pixels drift off-screen
+    const refill = Math.min(3, currentAqi - particles.length);
+    for (let i = 0; i < refill; i++) particles.push(new Particle());
+  }
+}
+
+setInterval(secondTick, 1000);
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 
