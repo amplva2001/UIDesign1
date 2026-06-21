@@ -217,7 +217,7 @@ function render() {
   }
 
   ctx.fillStyle = dark ? '#ffffff' : '#000000';
-  const collarExtend = Math.round(PIX / 2);
+  const collarExtend = Math.round(PIX / 2) + (CELL - PIX);
   ctx.fillRect(pipeX - collarW / 2, collarTopY - collarExtend, collarW, collarH + collarExtend);
   ctx.fillRect(pipeX - pipeW  / 2, collarTopY + collarH,      pipeW,   H - collarTopY - collarH + 4);
 
